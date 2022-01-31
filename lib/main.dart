@@ -4,6 +4,10 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'dart:core';
+import 'package:http/http.dart' as http;
+
+const String testImage = "https://www.itying.com/images/flutter/2.png";
 
 final GlobalKey<NavigatorState> navigatorKey =
     GlobalKey<NavigatorState>(); // Create a gobal context for Navigator
@@ -25,6 +29,7 @@ final GlobalKey<NavigatorState> navigatorKey =
 void main(List<String> args) {
   runApp(const MyApp());
   if (Platform.isAndroid) {
+// 关于状态栏沉浸只要吧SafeArea去掉就行
 //     // 以下两行 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。
     SystemUiOverlayStyle systemUiOverlayStyle =
         const SystemUiOverlayStyle(statusBarColor: Colors.transparent);
@@ -38,7 +43,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const Bar_1();
+    return const test_MainPageBar();
   }
 }
 
@@ -55,15 +60,19 @@ class _Bar_1 extends State<Bar_1> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // 一个全局的contaxt(Navigator路由返回)
       navigatorKey: navigatorKey,
       home: Scaffold(
         key: open,
         appBar: PreferredSize(
+          // 定义appbar高度
           preferredSize: const Size.fromHeight(100.0),
           child: AppBar(
             systemOverlayStyle: SystemUiOverlayStyle.light,
             leading: IconButton(
+              // 以按钮的方式触发Drawer_1
               onPressed: () => open.currentState!.openDrawer(),
+              // '!'防止Dart空安全报错
               icon: const Icon(Icons.settings),
             ),
           ),
@@ -73,6 +82,63 @@ class _Bar_1 extends State<Bar_1> {
       ),
     );
   }
+}
+
+class test_MainPageBar extends StatefulWidget {
+  const test_MainPageBar({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _test_MainPageBar();
+  }
+}
+
+class _test_MainPageBar extends State<test_MainPageBar> {
+  @override
+  Widget build(BuildContext context) {
+    // return Scaffold(
+    //     body: CustomScrollView(
+    //   slivers: <Widget>[
+    //     SliverAppBar(
+    //       leading: IconButton(
+    //         onPressed: () => print("passed!"),
+    //         icon: const Icon(Icons.settings),
+    //       ),
+    //       expandedHeight: 200.0,
+    //       flexibleSpace: FlexibleSpaceBar(
+    //         background: Image.network(testImage),
+    //       ),
+    //     )
+    //   ],
+    // ));
+
+    return const test_Code();
+  }
+}
+
+class test_Code extends Scaffold {
+  const test_Code({Key? key}) : super(key: key);
+  @override
+  Widget? get body => CustomScrollView(
+        slivers: <Widget>[
+          const SliverAppBar(
+            title: Text("标题"),
+            expandedHeight: 230.0,
+            floating: false,
+            pinned: true,
+            snap: false,
+          ),
+          SliverFixedExtentList(
+            itemExtent: 50.0,
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => ListTile(
+                title: Text("Item $index"),
+              ),
+              childCount: 30,
+            ),
+          ),
+        ],
+      );
 }
 
 // leading: IconButton(
@@ -139,7 +205,9 @@ class Drawer_1 extends Drawer {
                 Navigator.pop(navigatorKey.currentState!.context, "fuck!");
               },
             ),
-            const Divider(),
+            const Divider(
+              color: Colors.red,
+            ),
             const ListTile(
               title: Text("System Settings"),
               leading: CircleAvatar(
@@ -178,6 +246,21 @@ class _MainPage extends State<MainPage> {
   }
 }
 
+class Weiget_2 extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _Weiget_2();
+  }
+}
+
+class _Weiget_2 extends State<Weiget_2> {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}
+
 class Weiget_1 extends StatefulWidget {
   const Weiget_1({Key? key}) : super(key: key);
   @override
@@ -192,3 +275,8 @@ class _Weiget_1 extends State<Weiget_1> {
     throw UnimplementedError();
   }
 }
+
+// String netWork_data() {
+//    http.get("")
+//   return
+// }
